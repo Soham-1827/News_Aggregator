@@ -4,12 +4,21 @@ from transformers import pipeline
 import spacy
 NEWS_API_KEY = '5db0e65032344d939c46fcf368f66cf4'
 
-
+def get_user_parameters():
+    parameters = []
+    query = input("What is the query?\n")
+    if type(query.lower()) is str and query != "":
+        parameters.append(query)
+    language = input("What is the language?\n")
+    if type(language.lower()) is str and language != "":
+        parameters.append(language)
+    return parameters
 def get_trending_news_headlines(api_key):
+    parameter_list = get_user_parameters()
     url = 'https://newsapi.org/v2/everything'
     params = {
-        'q': 'apple',
-        'language': 'en',
+        'q': parameter_list[0],
+        'language': parameter_list[1].strip(),
         'apiKey': api_key,
         'from': '2024-07-23',
         'to': '2024-07-23',
@@ -62,6 +71,7 @@ def summarize_text(text, nlp, num_sentences=3):
 
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm")
+
 trending_headlines = get_trending_news_headlines(NEWS_API_KEY)
 
 if trending_headlines:
